@@ -21,7 +21,7 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
-      - name: Build iOS Simulator app
+      - name: Build iOS Device app
         run: |
           xcodebuild \
             -project DucDuyExternalMenu.xcodeproj \
