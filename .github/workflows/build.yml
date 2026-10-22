@@ -32,13 +32,16 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
-      - name: Package simulator app
-        run: |
-          APP_PATH="build/Build/Products/Debug-iphonesimulator/DucDuyExternalMenu.app"
-          test -d "$APP_PATH"
-          mkdir -p output
-          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" output/DucDuyExternalMenu-Simulator.zip
-
+      - name: Check iOS Device Build
+  run: |
+    APP_PATH="build/Build/Products/Release-iphoneos/DucDuyExternalMenu.app"
+    if [ ! -d "$APP_PATH" ]; then
+      echo "App not found at: $APP_PATH"
+      echo "Available build products:"
+      find build/Build/Products -maxdepth 3 -name "*.app" -print
+      exit 1
+    fi
+    echo "Found app: $APP_PATH"
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
