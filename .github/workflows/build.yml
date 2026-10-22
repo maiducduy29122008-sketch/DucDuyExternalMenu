@@ -43,15 +43,19 @@ jobs:
           fi
           echo "Found app: $APP_PATH"
 
-      - name: Package unsigned build for inspection
+      - name: Package unsigned app for inspection
         run: |
           APP_PATH="build/Build/Products/Debug-iphoneos/DucDuyExternalMenu.app"
-          mkdir -p output
-          ditto -c -k --sequesterRsrc --keepParent \
-            "$APP_PATH" output/DucDuyExternalMenu-Unsigned.zip
+          test -d "$APP_PATH"
+
+          mkdir -p output/Payload
+          cp -R "$APP_PATH" output/Payload/
+
+          cd output
+          zip -qr DucDuyExternalMenu-Unsigned.ipa Payload
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: DucDuyExternalMenu-Unsigned
-          path: output/DucDuyExternalMenu-Unsigned.zip
+          path: output/DucDuyExternalMenu-Unsigned.ipa
