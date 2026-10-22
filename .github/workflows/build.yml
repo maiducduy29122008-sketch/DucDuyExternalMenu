@@ -26,7 +26,7 @@ jobs:
           xcodebuild \
             -project DucDuyExternalMenu.xcodeproj \
             -scheme DucDuyExternalMenu \
-            -sdk iphonesimulator \
+            -sdk iphoneos \
             -configuration Debug \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
