@@ -21,7 +21,7 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen generate
 
-      - name: Build iOS Device app
+      - name: Build iOS Device App
         run: |
           xcodebuild \
             -project DucDuyExternalMenu.xcodeproj \
@@ -33,17 +33,25 @@ jobs:
             build
 
       - name: Check iOS Device Build
-  run: |
-    APP_PATH="build/Build/Products/Release-iphoneos/DucDuyExternalMenu.app"
-    if [ ! -d "$APP_PATH" ]; then
-      echo "App not found at: $APP_PATH"
-      echo "Available build products:"
-      find build/Build/Products -maxdepth 3 -name "*.app" -print
-      exit 1
-    fi
-    echo "Found app: $APP_PATH"
+        run: |
+          APP_PATH="build/Build/Products/Debug-iphoneos/DucDuyExternalMenu.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "App not found at: $APP_PATH"
+            echo "Available build products:"
+            find build/Build/Products -maxdepth 3 -name "*.app" -print
+            exit 1
+          fi
+          echo "Found app: $APP_PATH"
+
+      - name: Package unsigned build for inspection
+        run: |
+          APP_PATH="build/Build/Products/Debug-iphoneos/DucDuyExternalMenu.app"
+          mkdir -p output
+          ditto -c -k --sequesterRsrc --keepParent \
+            "$APP_PATH" output/DucDuyExternalMenu-Unsigned.zip
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: DucDuyExternalMenu-Simulator
-          path: output/DucDuyExternalMenu-Simulator.zip
+          name: DucDuyExternalMenu-Unsigned
+          path: output/DucDuyExternalMenu-Unsigned.zip
